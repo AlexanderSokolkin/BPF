@@ -23,7 +23,6 @@ public:
 	~Widget();
 
 private slots:
-//	void slotOnRadioButtonClicked();
 	void slotOnButtonGetSpectrumClicked();
 	void slotOnButtonGetTransformClicked();
 
@@ -32,11 +31,10 @@ private:
 
 	void convertToGray();
 	void imageBPF(bool direct);
-//	QVector<Complex> stringDPF(const QVector<Complex> &t_vector, int t_coeff = 1);
-//	QVector<Complex> DPF(const QVector<Complex> &t_vector, const int &t_N, bool t_isForward = true, int t_step = 0);
-//	QVector<Complex> restoreOrder(const QVector<Complex> &t_vector);
 	void fourierTransform(QVector<complexNumber> &t_vector, bool t_isDirect);
-	int numReverse(int32_t t_num, int32_t t_lgNum);
+	int32_t numReverse(int32_t t_num, int32_t t_lgNum);
+	void freqFilter();
+	void lowFreqFilter();
 
 
 	QImage			m_initialImage;

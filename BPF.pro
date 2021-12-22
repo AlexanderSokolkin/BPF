@@ -17,7 +17,8 @@ SOURCES += \
 HEADERS += \
     complex.h \
     matrix.h \
-    widget.h
+    widget.h \
+    constants.h
 
 FORMS += \
     widget.ui

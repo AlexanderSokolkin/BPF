@@ -159,6 +159,15 @@ QVector<T>& Matrix<T>::operator[](const double &t_num)
 	return m_matrix[t_num];
 }
 
+//template <typename T>
+//Matrix<T>& Matrix<T>::operator=(const Matrix<T> &t_otherMatrix)
+//{
+//	for (int i = 0; i < m_rows; ++i) {
+//		m_matrix[i] = t_otherMatrix.getRow(i);
+//	}
+//	return *this;
+//}
+
 template <typename T>
 Matrix<T> Matrix<T>::transp(Matrix<T> &t_matrix)
 {
@@ -170,6 +179,20 @@ Matrix<T> Matrix<T>::transp(Matrix<T> &t_matrix)
 	}
 
 	return result;
+}
+
+template <typename T>
+bool Matrix<T>::isEmpty()
+{
+	return m_rows == 0 && m_cols == 0;
+}
+
+template <typename T>
+void Matrix<T>::clear()
+{
+	m_matrix.clear();
+	m_rows = 0;
+	m_cols = 0;
 }
 
 template class Matrix<double>;

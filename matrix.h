@@ -24,7 +24,10 @@ public:
 	Matrix<T> operator*(Matrix<T> &t_otherMatrix);
 	Matrix<T> operator*(const double &t_num);
 	QVector<T>& operator[](const double &t_num);
+//	Matrix<T>& operator=(const Matrix<T> &t_otherMatrix);
 	Matrix<T> transp(Matrix<T> &t_matrix);
+	bool isEmpty();
+	void clear();
 
 
 private:
