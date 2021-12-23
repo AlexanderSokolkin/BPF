@@ -254,14 +254,14 @@
            <item>
             <widget class="QRadioButton" name="rbt_noFilter">
              <property name="text">
-              <string>Без филтрации</string>
+              <string>Без фильтрации</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QRadioButton" name="rbt_hightFreqFilter">
              <property name="text">
-              <string>Высокочастотная филтрация</string>
+              <string>Высокочастотная фильтрация</string>
              </property>
             </widget>
            </item>

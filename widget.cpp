@@ -12,7 +12,7 @@ Widget::Widget(QWidget *parent)
 	, ui(new Ui::Widget)
 {
 	ui->setupUi(this);
-	m_decompositionBase = {4, 2, 2, 4, 4, 2};
+	m_decompositionBase = {8, 2, 2, 4, 2};
 	m_index = 0;
 	m_initialImage = QImage("://images/Cat.jpg");
 	convertToGray();
@@ -27,22 +27,6 @@ Widget::Widget(QWidget *parent)
 Widget::~Widget()
 {
 	delete ui;
-}
-
-void Widget::convertToGray()
-{
-	int width = m_initialImage.width();
-	int height = m_initialImage.height();
-
-	for (int x = 0; x < width; ++x) {
-		for (int y = 0; y < height; ++y) {
-			int a, b, c;
-			QColor color = m_initialImage.pixelColor(x, y);
-			color.getHsv(&a, &b, &c);
-			color.setHsv(0, 0, c);
-			m_initialImage.setPixelColor(x, y, color);
-		}
-	}
 }
 
 void Widget::imageBPF(bool direct)
@@ -73,16 +57,17 @@ void Widget::imageBPF(bool direct)
 		}
 	}
 
+
 	// БПФ колонок
 	for (int i = 0; i < WIDTH; ++i) {
-		QVector<complexNumber> column = matrix.getColumn(i);
-		fourierTransform(column, direct);
-		matrix.setColumn(column, i);
+		QVector<complexNumber> temp = matrix.getColumn(i);
+		stringBPF(temp, direct);
+		matrix.setColumn(temp, i);
 	}
 
 	// БПФ строк
 	for (int i = 0; i < HEIGHT; ++i) {
-		fourierTransform(matrix[i], direct);
+		stringBPF(matrix[i], direct);
 	}
 
 	QImage result = m_initialImage;
@@ -106,6 +91,64 @@ void Widget::imageBPF(bool direct)
 	}
 }
 
+void Widget::stringBPF(QVector<complexNumber> &t_string, bool direct)
+{
+	if (m_index = m_decompositionBase.size()) {
+		fourierTransform(t_string, direct);
+		return;
+	}
+
+	int32_t coeff = 1;
+	for (int i = 0; i < m_index; ++i) {
+		coeff *= m_decompositionBase[i];
+	}
+	int32_t rows = m_decompositionBase[m_index++];
+	int32_t cols = t_string.size() / rows;
+
+	// Заполнение матрицы (вектор -> матрица)
+	Matrix<complexNumber> matrix(rows, cols);
+	for (int x = 0; x < rows; ++x) {
+		for (int y = 0; y < cols; ++y) {
+			matrix(x, y) = t_string[x * cols + y];
+		}
+	}
+
+	// ДПФ столбцов + умножение на поворачивающий множитель
+	for (int i = 0; i < cols; ++i) {
+		QVector<complexNumber> temp = matrix.getColumn(i);
+		fourierTransform(temp, direct);
+		matrix.setColumn(temp, i);
+		for (int j = 0; j < rows; ++j) {
+			double angel = (-2 * M_PI / HEIGHT) * (i * j * coeff);
+			complexNumber exponent(cos(angel), sin(angel));
+			matrix(j, i) *= exponent;
+		}
+	}
+
+	for (int i = 0; i < rows; ++i) {
+		stringBPF(matrix[i], direct);
+		for (int j = 0; j < matrix[i].size(); ++j) {
+			t_string[i + j * rows] = matrix(i, j);
+		}
+	}
+
+}
+
+void Widget::convertToGray()
+{
+	int width = m_initialImage.width();
+	int height = m_initialImage.height();
+
+	for (int x = 0; x < width; ++x) {
+		for (int y = 0; y < height; ++y) {
+			int a, b, c;
+			QColor color = m_initialImage.pixelColor(x, y);
+			color.getHsv(&a, &b, &c);
+			color.setHsv(0, 0, c);
+			m_initialImage.setPixelColor(x, y, color);
+		}
+	}
+}
 
 int32_t Widget::numReverse(int32_t t_num, int32_t t_lgNum) {
 	int32_t res = 0;

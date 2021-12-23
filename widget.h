@@ -31,18 +31,19 @@ private:
 
 	void convertToGray();
 	void imageBPF(bool direct);
+	void stringBPF(QVector<complexNumber> &t_string, bool direct);
 	void fourierTransform(QVector<complexNumber> &t_vector, bool t_isDirect);
 	int32_t numReverse(int32_t t_num, int32_t t_lgNum);
 	void freqFilter();
 	void lowFreqFilter();
 
 
-	QImage			m_initialImage;
-	QImage			m_spectrumImage;
-	QImage			m_transformImage;
+	QImage		m_initialImage;
+	QImage		m_spectrumImage;
+	QImage		m_transformImage;
 
-	QVector<int>	m_decompositionBase;
-	int32_t			m_index;
+	QVector<int32_t>	m_decompositionBase;
+	int32_t				m_index;
 
 	Matrix<complexNumber>	m_imageSpectrum;
 };
